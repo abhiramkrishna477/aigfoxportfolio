@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aigfox Originals | The Art of Originality</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --text: #ffffff;
+            --border: #262626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Standard Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Strict B&W Theme */
+        .bw-grid {
+            border-color: var(--border);
+        }
+
+        .nav-blur {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Category Filter Buttons */
+        .cat-btn {
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .cat-btn.active {
+            background-color: white;
+            color: black;
+            border-color: white;
+        }
+
+        /* Video Containers */
+        .v-card {
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .v-card:hover .v-overlay {
+            opacity: 1;
+        }
+
+        .v-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Specific aspect ratios */
+        /* Specific aspect ratios - Standardized to Vertical for consistency with content */
+        .aspect-social {
+            aspect-ratio: 9 / 16;
+        }
+
+        .aspect-cinema {
+            aspect-ratio: 9 / 16;
+        }
+
+        /* Changed to vertical */
+        .aspect-product {
+            aspect-ratio: 9 / 16;
+        }
+
+        /* Changed to vertical */
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+    <!-- Background Video -->
+    <img src="giphy.gif" alt="" class="fixed top-0 left-0 w-full h-full object-cover -z-10 opacity-40 mix-blend-screen">
+    <div class="fixed top-0 left-0 w-full h-full bg-black/50 -z-10"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 nav-blur">
+        <div class="max-w-[1400px] mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <img src="../aigfox_logo.png" alt="Aigfox Originals" class="h-10 w-auto invert">
+                <div class="font-black text-2xl tracking-tighter uppercase leading-none">
+                    Aigfox<br><span class="text-[10px] tracking-[0.5em] font-light text-gray-400">Originals</span>
+                </div>
+            </div>
+
+            <nav
+                class="hidden md:flex items-center space-x-12 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500">
+                <a href="#work" class="hover:text-white transition">Portfolio</a>
+                <a href="#legacy" class="hover:text-white transition">Legacy</a>
+                <a href="#contact" class="hover:text-white transition">Contact</a>
+                <a href="#contact" class="bg-white text-black px-6 py-2.5 rounded-sm hover:bg-gray-200 transition">Get
+                    Started</a>
+            </nav>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="min-h-screen flex flex-col justify-center px-6 relative">
+        <div class="max-w-[1400px] mx-auto w-full pt-20">
+            <span class="text-[10px] font-bold uppercase tracking-[0.6em] text-gray-500 mb-6 block reveal">Visual
+                Excellence Studio</span>
+            <h1 class="text-[12vw] md:text-[8vw] font-black leading-[0.85] tracking-tighter mb-10 reveal">
+                UNCOMPROMISED<br>ORIGINALITY.
+            </h1>
+            <div class="grid md:grid-cols-2 gap-10 reveal">
+                <p class="text-gray-400 text-lg md:text-xl max-w-xl leading-relaxed">
+                    Aigfox Originals is a production house where storytelling meets high-fidelity visual craft. We don't
+                    just record; we architect experiences.
+                </p>
+                <div class="flex items-end justify-start md:justify-end">
+                    <a href="#work"
+                        class="text-xs font-bold uppercase tracking-[0.4em] border-b-2 border-white pb-2 hover:opacity-50 transition">
+                        View Selected Reels
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Legacy Section -->
+    <section id="legacy" class="py-32 px-6 border-y border-[#262626]">
+        <div class="max-w-5xl mx-auto text-center">
+            <span class="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 mb-10 block reveal">Our
+                Legacy</span>
+            <h2 class="text-4xl md:text-6xl font-bold mb-12 tracking-tight reveal">Years of crafting the <br><span
+                    class="italic font-light opacity-50">extraordinary.</span></h2>
+            <div class="grid md:grid-cols-3 gap-16 text-left mt-20 reveal">
+                <div>
+                    <h3 class="text-5xl font-black mb-4">01.</h3>
+                    <h4 class="font-bold uppercase tracking-widest text-xs mb-4">The Vision</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Built on a decade of experience, we've transitioned
+                        from small sets to high-concept productions, maintaining our soul in every frame.</p>
+                </div>
+                <div>
+                    <h3 class="text-5xl font-black mb-4">02.</h3>
+                    <h4 class="font-bold uppercase tracking-widest text-xs mb-4">The Impact</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Our legacy is defined by the growth of our
+                        partners. We've helped brands scale through visuals that command attention.</p>
+                </div>
+                <div>
+                    <h3 class="text-5xl font-black mb-4">03.</h3>
+                    <h4 class="font-bold uppercase tracking-widest text-xs mb-4">The Future</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Innovating with CGI and VFX, we bridge the gap
+                        between human storytelling and digital possibility.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="work" class="py-32 px-6">
+        <div class="max-w-[1400px] mx-auto">
+
+            <!-- Category Switcher -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+                <div class="reveal">
+                    <h2 class="text-5xl font-black tracking-tighter uppercase mb-2">Work Library</h2>
+                    <p class="text-gray-500 text-sm tracking-widest uppercase">Select a Discipline</p>
+                </div>
+
+                <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-4 reveal">
+                    <button
+                        class="cat-btn active px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                        onclick="filterCat('all')">All</button>
+                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                        onclick="filterCat('social')">Social Reels</button>
+                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                        onclick="filterCat('promo')">Promotional</button>
+                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                        onclick="filterCat('story')">Storytelling</button>
+                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                        onclick="filterCat('cgi')">CGI/VFX</button>
+                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                        onclick="filterCat('product')">Product/Menu</button>
+                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                        onclick="filterCat('idea')">Concepts</button>
+                </div>
+            </div>
+
+            <!-- Categories Display -->
+            <div id="video-grid" class="space-y-32">
+
+                <!-- 1. Social Reels (Vertical Grid) -->
+                <div class="cat-section" data-cat="social">
+                    <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
+                        Social Reels & Short Videos <span class="h-px flex-1 bg-white/20"></span>
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 reveal">
+                        <!-- Repeat 5 Placeholders -->
+                        <div class="v-card aspect-social rounded-sm group">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-social rounded-sm group">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-social rounded-sm group">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-social rounded-sm group">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-social rounded-sm group">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Promo & Ads (Mix Grid) -->
+                <div class="cat-section" data-cat="promo">
+                    <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
+                        Promotional & Advertising <span class="h-px flex-1 bg-white/20"></span>
+                    </h3>
+                    <div class="grid md:grid-cols-4 gap-6 reveal">
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-social group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Brand Storytelling (Cinema Grid) -->
+                <div class="cat-section" data-cat="story">
+                    <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
+                        Brand Storytelling / Marketing <span class="h-px flex-1 bg-white/20"></span>
+                    </h3>
+                    <div class="grid md:grid-cols-4 gap-6 reveal">
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. CGI / VFX (Cinema Grid) -->
+                <div class="cat-section" data-cat="cgi">
+                    <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
+                        CGI / VFX Enhanced <span class="h-px flex-1 bg-white/20"></span>
+                    </h3>
+                    <div class="grid md:grid-cols-4 gap-6 reveal">
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-cinema group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Menu & Product Shoots (Product Grid) -->
+                <div class="cat-section" data-cat="product">
+                    <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
+                        Menu & Product Shoots <span class="h-px flex-1 bg-white/20"></span>
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
+                        <div class="v-card aspect-product group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-product group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-product group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-product group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-product group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-product group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Content Idea / Tutorial (Vertical) -->
+                <div class="cat-section" data-cat="idea">
+                    <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
+                        Content Ideas & Tutorials <span class="h-px flex-1 bg-white/20"></span>
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 reveal">
+                        <div class="v-card aspect-social group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-social group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-social group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-social group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="v-card aspect-social group relative">
+                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
+                                class="w-full h-full" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Simple Contact Form -->
+    <section id="contact" class="py-40 px-6 bg-white text-black">
+        <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20">
+            <div>
+                <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 leading-none reveal">LET'S<br>CREATE.
+                </h2>
+                <p class="text-gray-500 text-xl max-w-sm mb-12 reveal">Have a concept? We have the lens. Tell us about
+                    your project.</p>
+                <div class="space-y-4 reveal">
+                    <p class="text-xs font-bold uppercase tracking-[0.3em] text-gray-400">Email</p>
+                    <a href="mailto:hello@aigfox.com" class="text-2xl font-bold">hello@aigfox.com</a>
+                </div>
+            </div>
+
+            <div class="reveal">
+                <form class="space-y-8">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <input type="text" placeholder="Name"
+                            class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent">
+                        <input type="email" placeholder="Email"
+                            class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent">
+                    </div>
+                    <select
+                        class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent text-gray-400">
+                        <option>Social Media Reels</option>
+                        <option>Promotional Ads</option>
+                        <option>Brand Storytelling</option>
+                        <option>CGI / VFX Production</option>
+                        <option>Menu / Product Shoot</option>
+                        <option>Tutorials / Concepts</option>
+                    </select>
+                    <textarea rows="4" placeholder="Message"
+                        class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent"></textarea>
+                    <button
+                        class="bg-black text-white w-full py-6 font-bold uppercase tracking-widest hover:bg-gray-800 transition">Submit
+                        Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 px-6 bg-black border-t border-[#262626]">
+        <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="font-black text-xl uppercase tracking-tighter">Aigfox Originals</div>
+            <div class="flex space-x-12 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600">
+                <a href="#" class="hover:text-white transition">Instagram</a>
+                <a href="#" class="hover:text-white transition">Vimeo</a>
+                <a href="#" class="hover:text-white transition">LinkedIn</a>
+            </div>
+            <p class="text-[10px] text-gray-700 uppercase tracking-widest">© 2025 Creative Vision Studio</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth Reveal Logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Filtering Logic
+        function filterCat(cat) {
+            // Update Buttons
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show/Hide Sections
+            const sections = document.querySelectorAll('.cat-section');
+            sections.forEach(sec => {
+                if (cat === 'all' || sec.getAttribute('data-cat') === cat) {
+                    sec.style.display = 'block';
+                    // Re-trigger animation if hidden previously
+                    sec.querySelectorAll('.reveal').forEach(r => r.classList.add('active'));
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
