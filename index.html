@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aigfox Originals | The Art of Originality</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP for High Performance Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
@@ -21,25 +23,73 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            scroll-behavior: smooth;
             overflow-x: hidden;
+            cursor: none;
+            /* Hide default cursor */
         }
 
-        /* Standard Reveal Animation */
+        /* --- Custom Cursor --- */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 1px solid white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        }
+
+        #cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            opacity: 0.1;
+            border-color: transparent;
+        }
+
+        #cursor.video-hover {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: white;
+            backdrop-filter: blur(2px);
+        }
+
+        #cursor.video-hover::after {
+            content: 'VIEW';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 2px;
+        }
+
+        /* --- Standard Styles --- */
         .reveal {
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(30px);
         }
 
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Strict B&W Theme */
-        .bw-grid {
-            border-color: var(--border);
+        /* Utility for Text Animation */
+        .smooth-reveal {
+            opacity: 1;
+            display: block;
+            overflow: hidden;
+            /* Fixes alignment by containing the animation */
         }
 
         .nav-blur {
@@ -49,7 +99,6 @@
             border-bottom: 1px solid var(--border);
         }
 
-        /* Category Filter Buttons */
         .cat-btn {
             transition: all 0.3s ease;
             border: 1px solid var(--border);
@@ -61,45 +110,32 @@
             border-color: white;
         }
 
-        /* Video Containers */
         .v-card {
             background: #0a0a0a;
             border: 1px solid var(--border);
             overflow: hidden;
             position: relative;
+            transform: scale(1);
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s;
         }
 
-        .v-card:hover .v-overlay {
-            opacity: 1;
+        .v-card:hover {
+            transform: scale(0.98);
+            border-color: #555;
         }
 
-        .v-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        /* Specific aspect ratios */
-        /* Specific aspect ratios - Standardized to Vertical for consistency with content */
+        /* Aspect Ratios */
         .aspect-social {
             aspect-ratio: 9 / 16;
         }
 
         .aspect-cinema {
-            aspect-ratio: 9 / 16;
+            aspect-ratio: 16 / 9;
         }
 
-        /* Changed to vertical */
         .aspect-product {
-            aspect-ratio: 9 / 16;
+            aspect-ratio: 4 / 5;
         }
-
-        /* Changed to vertical */
 
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
@@ -109,53 +145,104 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* --- Cinematic Background --- */
+        .cinematic-bg {
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000000 70%);
+            opacity: 0.8;
+        }
+
+        #hero {
+            position: relative;
+            /* Background moved to ::before for filtering */
+        }
+
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('aigfox_fox-1.gif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: grayscale(100%) brightness(0.4);
+            z-index: -1;
+        }
     </style>
 </head>
 
 <body class="antialiased">
-    <!-- Background Video -->
-    <img src="giphy.gif" alt="" class="fixed top-0 left-0 w-full h-full object-cover -z-10 opacity-40 mix-blend-screen">
-    <div class="fixed top-0 left-0 w-full h-full bg-black/50 -z-10"></div>
+    <!-- Custom Cursor Element -->
+    <div id="cursor"></div>
+
+    <!-- Background: Simple Cinematic Studio Light -->
+    <div class="fixed top-0 left-0 w-full h-full -z-10 bg-black">
+        <div class="absolute inset-0 cinematic-bg"></div>
+        <!-- Subtle Film Grain Overlay -->
+        <div class="absolute inset-0 opacity-[0.04]"
+            style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%221%22/%3E%3C/svg%3E');">
+        </div>
+    </div>
 
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 nav-blur">
         <div class="max-w-[1400px] mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <img src="aigfox_logo.png" alt="Aigfox Originals" class="h-10 w-auto invert">
-                <div class="font-black text-2xl tracking-tighter uppercase leading-none">
-                    Aigfox<br><span class="text-[10px] tracking-[0.5em] font-light text-gray-400">Originals</span>
+            <div class="flex items-center gap-4 magnetic-wrap" data-strength="20">
+                <div class="magnetic-target flex items-center gap-4 cursor-pointer">
+                    <!-- Logo -->
+                    <img src="aigfox_logo_white.png" alt="Aigfox Originals" class="h-10 w-auto">
+                    <div class="font-black text-2xl tracking-tighter uppercase leading-[1] flex flex-col">
+                        <span>Aigfox</span>
+                        <span class="text-[10px] tracking-[0.5em] font-light text-gray-400">Originals</span>
+                    </div>
                 </div>
             </div>
 
             <nav
-                class="hidden md:flex items-center space-x-12 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500">
-                <a href="#work" class="hover:text-white transition">Portfolio</a>
-                <a href="#legacy" class="hover:text-white transition">Legacy</a>
-                <a href="#contact" class="hover:text-white transition">Contact</a>
-                <a href="#contact" class="bg-white text-black px-6 py-2.5 rounded-sm hover:bg-gray-200 transition">Get
-                    Started</a>
+                class="hidden md:flex items-center space-x-8 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500">
+                <div class="magnetic-wrap" data-strength="15"><a href="#work"
+                        class="magnetic-target block px-4 py-2 hover:text-white transition">Portfolio</a></div>
+                <div class="magnetic-wrap" data-strength="15"><a href="#legacy"
+                        class="magnetic-target block px-4 py-2 hover:text-white transition">Legacy</a></div>
+                <div class="magnetic-wrap" data-strength="15"><a href="#contact"
+                        class="magnetic-target block px-4 py-2 hover:text-white transition">Contact</a></div>
+                <div class="magnetic-wrap" data-strength="30">
+                    <a href="#contact"
+                        class="magnetic-target block bg-white text-black px-6 py-2.5 rounded-sm hover:bg-gray-200 transition">Get
+                        Started</a>
+                </div>
             </nav>
         </div>
     </nav>
 
     <!-- Hero -->
-    <section class="min-h-screen flex flex-col justify-center px-6 relative">
+    <section id="hero" class="min-h-screen flex flex-col justify-center px-6 relative">
         <div class="max-w-[1400px] mx-auto w-full pt-20">
             <span class="text-[10px] font-bold uppercase tracking-[0.6em] text-gray-500 mb-6 block reveal">Visual
                 Excellence Studio</span>
-            <h1 class="text-[12vw] md:text-[8vw] font-black leading-[0.85] tracking-tighter mb-10 reveal">
-                UNCOMPROMISED<br>ORIGINALITY.
+
+            <h1 class="font-black tracking-tighter mb-10">
+                <!-- Use leading-none and fluid text sizing to prevent overlap/bad breaks -->
+                <span
+                    class="block text-[6vw] md:text-[3.5vw] text-gray-400 mb-2 smooth-reveal leading-none">UNCOMPROMISED</span>
+                <span class="block text-[11vw] md:text-[10vw] text-white smooth-reveal leading-none">ORIGINALITY.</span>
             </h1>
+
             <div class="grid md:grid-cols-2 gap-10 reveal">
                 <p class="text-gray-400 text-lg md:text-xl max-w-xl leading-relaxed">
                     Aigfox Originals is a production house where storytelling meets high-fidelity visual craft. We don't
                     just record; we architect experiences.
                 </p>
                 <div class="flex items-end justify-start md:justify-end">
-                    <a href="#work"
-                        class="text-xs font-bold uppercase tracking-[0.4em] border-b-2 border-white pb-2 hover:opacity-50 transition">
-                        View Selected Reels
-                    </a>
+                    <div class="magnetic-wrap" data-strength="20">
+                        <a href="#work"
+                            class="magnetic-target inline-block text-xs font-bold uppercase tracking-[0.4em] border-b-2 border-white pb-2 hover:opacity-50 transition">
+                            View Selected Reels
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -166,24 +253,32 @@
         <div class="max-w-5xl mx-auto text-center">
             <span class="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-500 mb-10 block reveal">Our
                 Legacy</span>
-            <h2 class="text-4xl md:text-6xl font-bold mb-12 tracking-tight reveal">Years of crafting the <br><span
-                    class="italic font-light opacity-50">extraordinary.</span></h2>
+            <!-- Fixed word breaking: Reduced max size slightly and used inline-block for key words -->
+            <!-- Fixed word breaking: Reduced max size slightly and used inline-block for key words -->
+            <h2 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-12 tracking-tight leading-tight">
+                <span class="smooth-reveal font-light opacity-50" style="display: inline-block;">Years of crafting
+                    the</span>
+                <span class="smooth-reveal" style="display: inline-block;">extraordinary.</span>
+            </h2>
             <div class="grid md:grid-cols-3 gap-16 text-left mt-20 reveal">
-                <div>
+                <div class="group hover:opacity-80 transition cursor-none">
                     <h3 class="text-5xl font-black mb-4">01.</h3>
-                    <h4 class="font-bold uppercase tracking-widest text-xs mb-4">The Vision</h4>
+                    <h4 class="font-bold uppercase tracking-widest text-xs mb-4 text-white group-hover:text-gray-300">
+                        The Vision</h4>
                     <p class="text-gray-500 text-sm leading-relaxed">Built on a decade of experience, we've transitioned
                         from small sets to high-concept productions, maintaining our soul in every frame.</p>
                 </div>
-                <div>
+                <div class="group hover:opacity-80 transition cursor-none">
                     <h3 class="text-5xl font-black mb-4">02.</h3>
-                    <h4 class="font-bold uppercase tracking-widest text-xs mb-4">The Impact</h4>
+                    <h4 class="font-bold uppercase tracking-widest text-xs mb-4 text-white group-hover:text-gray-300">
+                        The Impact</h4>
                     <p class="text-gray-500 text-sm leading-relaxed">Our legacy is defined by the growth of our
                         partners. We've helped brands scale through visuals that command attention.</p>
                 </div>
-                <div>
+                <div class="group hover:opacity-80 transition cursor-none">
                     <h3 class="text-5xl font-black mb-4">03.</h3>
-                    <h4 class="font-bold uppercase tracking-widest text-xs mb-4">The Future</h4>
+                    <h4 class="font-bold uppercase tracking-widest text-xs mb-4 text-white group-hover:text-gray-300">
+                        The Future</h4>
                     <p class="text-gray-500 text-sm leading-relaxed">Innovating with CGI and VFX, we bridge the gap
                         between human storytelling and digital possibility.</p>
                 </div>
@@ -197,250 +292,196 @@
 
             <!-- Category Switcher -->
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
-                <div class="reveal">
-                    <h2 class="text-5xl font-black tracking-tighter uppercase mb-2">Work Library</h2>
-                    <p class="text-gray-500 text-sm tracking-widest uppercase">Select a Discipline</p>
+                <div>
+                    <!-- Fixed word breaking: Use whitespace-nowrap for larger screens, normal for mobile -->
+                    <h2
+                        class="text-5xl font-black tracking-tighter uppercase mb-2 smooth-reveal leading-none md:whitespace-nowrap break-normal">
+                        Work Library</h2>
+                    <p class="text-gray-500 text-sm tracking-widest uppercase reveal">Select a Discipline</p>
                 </div>
 
                 <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-4 reveal">
                     <button
-                        class="cat-btn active px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                        class="cat-btn active px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full hover-trigger"
                         onclick="filterCat('all')">All</button>
-                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                    <button
+                        class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full hover-trigger"
                         onclick="filterCat('social')">Social Reels</button>
-                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                    <button
+                        class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full hover-trigger"
                         onclick="filterCat('promo')">Promotional</button>
-                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                    <button
+                        class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full hover-trigger"
                         onclick="filterCat('story')">Storytelling</button>
-                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                    <button
+                        class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full hover-trigger"
                         onclick="filterCat('cgi')">CGI/VFX</button>
-                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                    <button
+                        class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full hover-trigger"
                         onclick="filterCat('product')">Product/Menu</button>
-                    <button class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full"
+                    <button
+                        class="cat-btn px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-full hover-trigger"
                         onclick="filterCat('idea')">Concepts</button>
                 </div>
             </div>
 
             <!-- Categories Display -->
             <div id="video-grid" class="space-y-32">
-
-                <!-- 1. Social Reels (Vertical Grid) -->
+                <!-- 1. Social Reels -->
                 <div class="cat-section" data-cat="social">
                     <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
                         Social Reels & Short Videos <span class="h-px flex-1 bg-white/20"></span>
                     </h3>
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-6 reveal">
-                        <!-- Repeat 5 Placeholders -->
-                        <div class="v-card aspect-social rounded-sm group">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <!-- Repeated Video Cards with video-trigger class -->
+                        <div class="v-card aspect-social rounded-sm group video-trigger">
+                            <iframe src="https://www.youtube.com/embed/9VH8TkKIlds"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-social rounded-sm group">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-social rounded-sm group video-trigger">
+                            <iframe src="https://www.youtube.com/embed/zFBeTYYrCLA"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-social rounded-sm group">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-social rounded-sm group video-trigger">
+                            <iframe src="https://www.youtube.com/embed/Ogm1fb8nlrY"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-social rounded-sm group">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-social rounded-sm group video-trigger">
+                            <iframe src="https://www.youtube.com/embed/b-uw1_nEa_k"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-social rounded-sm group">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-social rounded-sm group video-trigger">
+                            <iframe src="https://www.youtube.com/embed/9VH8TkKIlds"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. Promo & Ads (Mix Grid) -->
+                <!-- 2. Promo & Ads -->
                 <div class="cat-section" data-cat="promo">
                     <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
                         Promotional & Advertising <span class="h-px flex-1 bg-white/20"></span>
                     </h3>
                     <div class="grid md:grid-cols-4 gap-6 reveal">
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/zFBeTYYrCLA"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-social group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-social group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/b-uw1_nEa_k"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/9VH8TkKIlds"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                    </div>
-                </div>
-
-                <!-- 3. Brand Storytelling (Cinema Grid) -->
-                <div class="cat-section" data-cat="story">
-                    <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
-                        Brand Storytelling / Marketing <span class="h-px flex-1 bg-white/20"></span>
-                    </h3>
-                    <div class="grid md:grid-cols-4 gap-6 reveal">
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/Ogm1fb8nlrY"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
 
-                <!-- 4. CGI / VFX (Cinema Grid) -->
+                <!-- 3. CGI/VFX -->
                 <div class="cat-section" data-cat="cgi">
                     <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
                         CGI / VFX Enhanced <span class="h-px flex-1 bg-white/20"></span>
                     </h3>
                     <div class="grid md:grid-cols-4 gap-6 reveal">
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/b-uw1_nEa_k"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-social group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/Ogm1fb8nlrY"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/zFBeTYYrCLA"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-cinema group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/9VH8TkKIlds"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
 
-                <!-- 5. Menu & Product Shoots (Product Grid) -->
-                <div class="cat-section" data-cat="product">
+                <!-- 4. Storytelling -->
+                <div class="cat-section" data-cat="story">
                     <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
-                        Menu & Product Shoots <span class="h-px flex-1 bg-white/20"></span>
+                        Brand Storytelling <span class="h-px flex-1 bg-white/20"></span>
                     </h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 reveal">
-                        <div class="v-card aspect-product group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                    <div class="grid md:grid-cols-4 gap-6 reveal">
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/Ogm1fb8nlrY"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-product group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/b-uw1_nEa_k"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-product group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/9VH8TkKIlds"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
-                        <div class="v-card aspect-product group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="v-card aspect-product group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="v-card aspect-product group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
+                        <div class="v-card aspect-cinema group relative video-trigger">
+                            <iframe src="https://www.youtube.com/embed/zFBeTYYrCLA"
+                                class="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-700"
+                                frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
-
-                <!-- 6. Content Idea / Tutorial (Vertical) -->
-                <div class="cat-section" data-cat="idea">
-                    <h3 class="text-4xl font-black uppercase tracking-tighter text-white mb-10 flex items-center gap-4">
-                        Content Ideas & Tutorials <span class="h-px flex-1 bg-white/20"></span>
-                    </h3>
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 reveal">
-                        <div class="v-card aspect-social group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="v-card aspect-social group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="v-card aspect-social group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="v-card aspect-social group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="v-card aspect-social group relative">
-                            <iframe src="https://www.youtube.com/embed/wuofak-hrmg" title="Oiiaoiia Cat Meme"
-                                class="w-full h-full" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
@@ -449,13 +490,13 @@
     <section id="contact" class="py-40 px-6 bg-white text-black">
         <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20">
             <div>
-                <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 leading-none reveal">LET'S<br>CREATE.
-                </h2>
-                <p class="text-gray-500 text-xl max-w-sm mb-12 reveal">Have a concept? We have the lens. Tell us about
-                    your project.</p>
+                <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 leading-none smooth-reveal">
+                    LET'S<br>CREATE.</h2>
+                <p class="text-gray-500 text-xl max-w-sm mb-12 reveal">Have a concept? We have the lens.<br> Tell us
+                    about your project.</p>
                 <div class="space-y-4 reveal">
                     <p class="text-xs font-bold uppercase tracking-[0.3em] text-gray-400">Email</p>
-                    <a href="mailto:hello@aigfox.com" class="text-2xl font-bold">hello@aigfox.com</a>
+                    <a href="mailto:hello@aigfox.com" class="text-2xl font-bold hover-trigger">hello@aigfox.com</a>
                 </div>
             </div>
 
@@ -463,24 +504,23 @@
                 <form class="space-y-8">
                     <div class="grid md:grid-cols-2 gap-8">
                         <input type="text" placeholder="Name"
-                            class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent">
+                            class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent hover-trigger">
                         <input type="email" placeholder="Email"
-                            class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent">
+                            class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent hover-trigger">
                     </div>
                     <select
-                        class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent text-gray-400">
+                        class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent text-gray-400 hover-trigger">
                         <option>Social Media Reels</option>
                         <option>Promotional Ads</option>
                         <option>Brand Storytelling</option>
-                        <option>CGI / VFX Production</option>
-                        <option>Menu / Product Shoot</option>
-                        <option>Tutorials / Concepts</option>
                     </select>
                     <textarea rows="4" placeholder="Message"
-                        class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent"></textarea>
-                    <button
-                        class="bg-black text-white w-full py-6 font-bold uppercase tracking-widest hover:bg-gray-800 transition">Submit
-                        Inquiry</button>
+                        class="w-full border-b border-gray-200 py-4 focus:border-black outline-none bg-transparent hover-trigger"></textarea>
+                    <div class="magnetic-wrap" data-strength="50">
+                        <button
+                            class="magnetic-target bg-black text-white w-full py-6 font-bold uppercase tracking-widest hover:bg-gray-800 transition">Submit
+                            Inquiry</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -491,39 +531,161 @@
         <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
             <div class="font-black text-xl uppercase tracking-tighter">Aigfox Originals</div>
             <div class="flex space-x-12 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600">
-                <a href="#" class="hover:text-white transition">Instagram</a>
-                <a href="#" class="hover:text-white transition">Vimeo</a>
-                <a href="#" class="hover:text-white transition">LinkedIn</a>
+                <a href="#" class="hover:text-white transition hover-trigger">Instagram</a>
+                <a href="#" class="hover:text-white transition hover-trigger">Vimeo</a>
+                <a href="#" class="hover:text-white transition hover-trigger">LinkedIn</a>
             </div>
             <p class="text-[10px] text-gray-700 uppercase tracking-widest">© 2025 Creative Vision Studio</p>
         </div>
     </footer>
 
     <script>
-        // Smooth Reveal Logic
+        // --- 1. Custom Cursor Logic ---
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Smooth follow loop
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Hover States
+        document.querySelectorAll('a, button, .hover-trigger, input, select, textarea').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        document.querySelectorAll('.video-trigger').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('video-hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('video-hover'));
+        });
+
+
+        // --- 2. Magnetic Buttons Logic ---
+        document.querySelectorAll('.magnetic-wrap').forEach(wrap => {
+            const target = wrap.querySelector('.magnetic-target');
+            const strength = wrap.getAttribute('data-strength') || 30;
+
+            wrap.addEventListener('mousemove', (e) => {
+                const rect = wrap.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+
+                // GSAP for smooth magnetic pull
+                gsap.to(target, {
+                    x: x / (100 / strength), // Lower divisor = stronger pull
+                    y: y / (100 / strength),
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+
+            wrap.addEventListener('mouseleave', () => {
+                gsap.to(target, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+            });
+        });
+
+
+        // --- 3. Smooth Text Reveal Logic ---
+        // Helper to split text into characters for animation
+        // Helper to split text into characters for animation, respecting word boundaries
+        const splitText = (element) => {
+            const text = element.innerText.trim();
+            element.innerHTML = ''; // Clear content
+
+            const words = text.split(' ');
+
+            words.forEach((word, index) => {
+                // Create a wrapper for the word
+                const wordSpan = document.createElement('span');
+                wordSpan.style.display = 'inline-block';
+                wordSpan.style.whiteSpace = 'nowrap'; // Prevent breaking inside the word
+
+                word.split('').forEach(char => {
+                    const span = document.createElement('span');
+                    span.innerText = char;
+                    span.style.display = 'inline-block';
+                    wordSpan.appendChild(span);
+                });
+
+                element.appendChild(wordSpan);
+
+                // Add space after word if not the last one
+                if (index < words.length - 1) {
+                    const space = document.createElement('span');
+                    space.innerHTML = '&nbsp;';
+                    space.style.display = 'inline-block';
+                    element.appendChild(space);
+                }
+            });
+        };
+
+        // Initialize split text on load
+        document.querySelectorAll('.smooth-reveal').forEach(el => splitText(el));
+
+        // --- 4. Intersection Observers ---
+        const observerOptions = { threshold: 0.15 };
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
+                    // Standard reveal
+                    if (entry.target.classList.contains('reveal')) {
+                        entry.target.classList.add('active');
+                    }
+
+                    // Smooth Text Stagger Reveal
+                    if (entry.target.classList.contains('smooth-reveal') && !entry.target.dataset.animated) {
+                        gsap.fromTo(entry.target.querySelectorAll('span'),
+                            {
+                                y: 100,
+                                opacity: 0,
+                                rotate: 10
+                            },
+                            {
+                                y: 0,
+                                opacity: 1,
+                                rotate: 0,
+                                stagger: 0.02,  // Faster stagger (was 0.04)
+                                duration: 0.8,  // Faster duration (was 1.2)
+                                ease: "power4.out"
+                            }
+                        );
+                        entry.target.dataset.animated = "true";
+                    }
                 }
             });
-        }, { threshold: 0.1 });
+        }, observerOptions);
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        // Also observe smooth-reveal elements explicitly
+        document.querySelectorAll('.smooth-reveal').forEach(el => observer.observe(el));
 
-        // Filtering Logic
+
+        // --- 5. Category Filtering (Preserved) ---
         function filterCat(cat) {
-            // Update Buttons
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-
-            // Show/Hide Sections
             const sections = document.querySelectorAll('.cat-section');
             sections.forEach(sec => {
                 if (cat === 'all' || sec.getAttribute('data-cat') === cat) {
                     sec.style.display = 'block';
-                    // Re-trigger animation if hidden previously
-                    sec.querySelectorAll('.reveal').forEach(r => r.classList.add('active'));
+                    // Re-trigger animations
+                    sec.querySelectorAll('.reveal').forEach(r => {
+                        r.classList.remove('active');
+                        setTimeout(() => r.classList.add('active'), 50);
+                    });
                 } else {
                     sec.style.display = 'none';
                 }
@@ -533,4 +695,3 @@
 </body>
 
 </html>
-
